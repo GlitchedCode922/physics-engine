@@ -14,11 +14,12 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Physics Render Window");
 
     scene.gravity = Vector2(0, 0);
-    for (int i = 0; i < 20; ++i) {
-        Body* body = new Body(Vector2(400, 300), i + 5);
+    for (int i = 0; i < 50; ++i) {
+        Body* body = new Body(Vector2(i * 20, i * 25), i % 20 + 5);
         body->velocity = Vector2((-5 + i * 20) % 24000, (20 + i * 18) % 24000);
-        body->restitution = 1;
+        body->restitution = 0.8;
         body->friction = 1;
+        body->mass = pow(i % 20 + 5, 2) / 400;
         scene.addBody(body);
     }
     scene.addStaticBody(&bb);

@@ -9,6 +9,7 @@ public:
     Vector2 gravity = Vector2(0, 327);
     std::vector<Body*> bodies;
     std::vector<StaticBody*> staticBodies;
+    int collisionIterations = 10;
 
     void addBody(Body *body);
     void removeBody(Body *body);

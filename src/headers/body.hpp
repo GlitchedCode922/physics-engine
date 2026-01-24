@@ -15,4 +15,5 @@ public:
 
     void update(double deltaTime);
     void applyForce(const Vector2& force);
+    void resolveCollision(Body* other);
 };

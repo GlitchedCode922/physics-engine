@@ -83,4 +83,7 @@ public:
     double dot(const Vector2& other) const {
         return x * other.x + y * other.y;
     }
+    Vector2 normalize() const {
+        return *this / this->length();
+    }
 };
