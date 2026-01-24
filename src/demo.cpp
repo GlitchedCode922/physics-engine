@@ -40,6 +40,9 @@ int main() {
     scene.addConstraint(sc);
     scene.addStaticBody(&bb);
 
+    // Dragging variables
+    Body* draggedBody = nullptr;
+    Vector2 dragOffset(0, 0);
 
     // Main loop
     bool firstFrame = true;
@@ -56,12 +59,51 @@ int main() {
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) window.close();
+
+            // Mouse pressed
+            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                Vector2 mouseWorld(mousePos.x, mousePos.y);
+
+                // Check if clicking on any body
+                for (auto& body : scene.bodies) {
+                    Vector2 diff = body->position - mouseWorld;
+                    if (diff.length() <= body->radius) {
+                        draggedBody = body;
+                        dragOffset = body->position - mouseWorld;
+                        body->velocity = Vector2(0, 0); // reset velocity before pulling
+                        break;
+                    }
+                }
+            }
+
+            // Mouse released
+            if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+                draggedBody = nullptr;
+            }
         }
+
+        // Update dragged body using velocity toward mouse
+        if (draggedBody) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            Vector2 mouseWorld(mousePos.x, mousePos.y);
+
+            // Target position with offset
+            Vector2 target = mouseWorld + dragOffset;
+
+            // Compute velocity toward target
+            Vector2 desiredVelocity = target - draggedBody->position;
+
+            // Scale for smooth movement (tweak factor for responsiveness)
+            float speedFactor = 10.0f;
+            draggedBody->velocity = desiredVelocity * speedFactor;
+        }
+
+        // Update physics
+        scene.update(deltaTime.asSeconds());
 
         // Clear the window with a light gray color
         window.clear(sf::Color(0x2e2e2eff));
-
-        scene.update(deltaTime.asSeconds());
         for (auto& body: scene.bodies) {
             sf::CircleShape shape(body->radius);
             shape.setFillColor(sf::Color(0xf0f0f0ff));
