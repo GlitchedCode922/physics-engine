@@ -9,13 +9,13 @@ const char window_title[] = "Bouncing Ball";
 Scene* setupScene() {
     Scene* scene = new Scene();
     scene->gravity = Vector2(0, 0);
-    Body* body = new Body(Vector2(400, 300), 20);
-    body->velocity = Vector2(400, 400);
-    body->restitution = 1;
-    body->friction = 1;
-    body->mass = 2;
-    scene->addBody(body);
-    StaticBoundedBox* bb = new StaticBoundedBox(Vector2(400, 300), 700, 500);
-    scene->addStaticBody(bb);
+    CircleBody* ball = new CircleBody(Vector2(400, 300), 20);
+    ball->velocity = Vector2(400, 400);
+    ball->restitution = 1;
+    ball->friction = 1;
+    ball->mass = 2;
+    scene->addBody(ball);
+    BoundedBoxBody* bb = new BoundedBoxBody(Vector2(400, 300), 700, 500);
+    scene->addBody(bb);
     return scene;
 }

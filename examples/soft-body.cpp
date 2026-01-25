@@ -1,6 +1,5 @@
 #include "headers/scene.hpp"
 #include "headers/body.hpp"
-#include "headers/staticbody.hpp"
 #include "headers/constraint.hpp"
 #include "api.hpp"
 
@@ -26,7 +25,7 @@ Scene* setupScene() {
     for (int y = 0; y < rows; ++y) {
         for (int x = 0; x < cols; ++x) {
             Vector2 pos = origin + Vector2(x * spacing, y * spacing);
-            Body* body = new Body(pos, radius);
+            CircleBody* body = new CircleBody(pos, radius);
             body->velocity = Vector2(0, 0);
             body->restitution = 0.5f;
             body->friction = 0.4f;
@@ -72,8 +71,8 @@ Scene* setupScene() {
         }
     }
 
-    StaticBoundedBox* bb = new StaticBoundedBox(Vector2(400, 300), 700, 500);
-    scene->addStaticBody(bb);
+    BoundedBoxBody* bb = new BoundedBoxBody(Vector2(400, 300), 700, 500);
+    scene->addBody(bb);
 
     return scene;
 }

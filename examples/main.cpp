@@ -3,8 +3,6 @@
 
 #include "headers/vector.hpp"
 #include "headers/body.hpp"
-#include "headers/staticbody.hpp"
-#include "headers/constraint.hpp"
 #include "headers/scene.hpp"
 #include "api.hpp"
 
@@ -44,13 +42,15 @@ int main() {
                 Vector2 mouseWorld(mousePos.x, mousePos.y);
 
                 // Check if clicking on any body
-                for (auto& body : scene->bodies) {
-                    Vector2 diff = body->position - mouseWorld;
-                    if (diff.length() <= body->radius) {
-                        draggedBody = body;
-                        dragOffset = body->position - mouseWorld;
-                        body->velocity = Vector2(0, 0); // reset velocity before pulling
-                        break;
+                for (auto body: scene->bodies) {
+                    if (CircleBody* c = dynamic_cast<CircleBody*>(body)) {
+                        Vector2 diff = c->position - mouseWorld;
+                        if (diff.length() <= c->radius) {
+                            draggedBody = c;
+                            dragOffset = c->position - mouseWorld;
+                            c->velocity = Vector2(0, 0); // reset velocity before pulling
+                            break;
+                        }
                     }
                 }
             }
@@ -85,11 +85,13 @@ int main() {
 
         // Clear the window with a light gray color
         window.clear(sf::Color(0x2e2e2eff));
-        for (auto& body: scene->bodies) {
-            sf::CircleShape shape(body->radius);
-            shape.setFillColor(sf::Color(0xf0f0f0ff));
-            shape.setPosition(body->position.x - body->radius, body->position.y - body->radius);
-            window.draw(shape);
+        for (auto body: scene->bodies) {
+            if (CircleBody* c = dynamic_cast<CircleBody*>(body)) {
+                sf::CircleShape shape(c->radius);
+                shape.setFillColor(sf::Color(0xf0f0f0ff));
+                shape.setPosition(c->position.x - c->radius, c->position.y - c->radius);
+                window.draw(shape);
+            }
         }
         // Display the contents of the window
         window.display();
@@ -98,9 +100,6 @@ int main() {
     // Cleanup
     for (auto& body : scene->bodies) {
         delete body;
-    }
-    for (auto& staticBody : scene->staticBodies) {
-        delete staticBody;
     }
     for (auto& constraint : scene->constraints) {
         delete constraint;
