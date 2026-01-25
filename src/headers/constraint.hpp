@@ -1,6 +1,6 @@
 #pragma once
-#include "vector.hpp"
-#include "body.hpp"
+#include "headers/vector.hpp"
+#include "headers/body.hpp"
 
 class Constraint {
 public:
@@ -11,6 +11,7 @@ public:
         : bodyA(a), bodyB(b) {}
 
     virtual void apply() = 0;
+    virtual ~Constraint() {}
 };
 
 class SpringConstraint : public Constraint {

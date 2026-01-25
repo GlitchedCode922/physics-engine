@@ -6,39 +6,15 @@
 #include "headers/staticbody.hpp"
 #include "headers/constraint.hpp"
 #include "headers/scene.hpp"
-
-Scene scene;
-StaticBoundedBox bb(Vector2(400, 300), 700, 500);
+#include "api.hpp"
 
 int main() {
     // Create the main window
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Physics Render Window");
+    sf::RenderWindow window(sf::VideoMode(800, 600), window_title);
 
-    scene.gravity = Vector2(0, 0);
-    // for (int i = 0; i < 50; ++i) {
-    //     Body* body = new Body(Vector2(i * 20, i * 25), i % 20 + 5);
-    //     body->velocity = Vector2((-5 + i * 20) % 24000, (20 + i * 18) % 24000);
-    //     body->restitution = 0.8;
-    //     body->friction = 1;
-    //     body->mass = pow(i % 20 + 5, 2) / 400;
-    //     scene.addBody(body);
-    // }
-    Body* body = new Body(Vector2(200, 150), 20);
-    body->velocity = Vector2(150, 100);
-    body->restitution = 0;
-    body->friction = 1;
-    body->mass = 1;
-    scene.addBody(body);
-    Body* body2 = new Body(Vector2(600, 450), 30);
-    body2->velocity = Vector2(-100, -150);
-    body2->restitution = 0;
-    body2->friction = 1;
-    body2->mass = 1;
-    scene.addBody(body2);
-    SpringConstraint* sc = new SpringConstraint(body, body2, 150, 50);
-    sc->damping = 1;
-    scene.addConstraint(sc);
-    scene.addStaticBody(&bb);
+    Scene* scene = setupScene();
+    double fixed_dt = 1.0 / framerate;
+    double accumulator = 0.0;
 
     // Dragging variables
     Body* draggedBody = nullptr;
@@ -49,11 +25,13 @@ int main() {
     sf::Clock clock;
     clock.restart();
     while (window.isOpen()) {
-        sf::Time deltaTime = clock.restart();
+        double deltaTime = clock.restart().asSeconds();
         if (firstFrame) {
-            deltaTime = sf::seconds(0);
+            deltaTime = fixed_dt;
             firstFrame = false;
         }
+        if (deltaTime > 0.25) deltaTime = 0.25;
+        accumulator += deltaTime;
 
         // Process events
         sf::Event event;
@@ -66,7 +44,7 @@ int main() {
                 Vector2 mouseWorld(mousePos.x, mousePos.y);
 
                 // Check if clicking on any body
-                for (auto& body : scene.bodies) {
+                for (auto& body : scene->bodies) {
                     Vector2 diff = body->position - mouseWorld;
                     if (diff.length() <= body->radius) {
                         draggedBody = body;
@@ -100,11 +78,14 @@ int main() {
         }
 
         // Update physics
-        scene.update(deltaTime.asSeconds());
+        while (accumulator >= fixed_dt) {
+            scene->update(fixed_dt);
+            accumulator -= fixed_dt;
+        }
 
         // Clear the window with a light gray color
         window.clear(sf::Color(0x2e2e2eff));
-        for (auto& body: scene.bodies) {
+        for (auto& body: scene->bodies) {
             sf::CircleShape shape(body->radius);
             shape.setFillColor(sf::Color(0xf0f0f0ff));
             shape.setPosition(body->position.x - body->radius, body->position.y - body->radius);
@@ -113,6 +94,18 @@ int main() {
         // Display the contents of the window
         window.display();
     }
+
+    // Cleanup
+    for (auto& body : scene->bodies) {
+        delete body;
+    }
+    for (auto& staticBody : scene->staticBodies) {
+        delete staticBody;
+    }
+    for (auto& constraint : scene->constraints) {
+        delete constraint;
+    }
+    delete scene;
 
     return 0;
 }

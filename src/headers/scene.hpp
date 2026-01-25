@@ -1,8 +1,8 @@
 #pragma once
-#include "vector.hpp"
-#include "body.hpp"
-#include "staticbody.hpp"
-#include "constraint.hpp"
+#include "headers/vector.hpp"
+#include "headers/body.hpp"
+#include "headers/staticbody.hpp"
+#include "headers/constraint.hpp"
 #include <vector>
 
 class Scene {

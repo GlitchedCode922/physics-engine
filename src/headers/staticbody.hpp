@@ -1,6 +1,6 @@
 #pragma once
-#include "vector.hpp"
-#include "body.hpp"
+#include "headers/vector.hpp"
+#include "headers/body.hpp"
 #include <algorithm>
 
 inline double clamp(double value, double min, double max) {
@@ -12,6 +12,7 @@ public:
     Vector2 position;
 
     virtual void resolveCollision(Body& body) = 0;
+    virtual ~StaticBody() {}
 };
 
 class StaticBoundedBox : public StaticBody {
