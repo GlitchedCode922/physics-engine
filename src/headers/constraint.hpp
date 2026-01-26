@@ -14,7 +14,7 @@ public:
     virtual ~Constraint() {}
 };
 
-class SpringConstraint : public Constraint {
+class SpringConstraint: public Constraint {
 public:
     double restLength;
     double springConstant;
@@ -22,6 +22,15 @@ public:
 
     SpringConstraint(Body* a, Body* b, double restLength, double springConstant)
         : Constraint(a, b), restLength(restLength), springConstant(springConstant) {}
+
+    void apply() override;
+};
+
+class DistanceConstraint: public Constraint {
+public:
+    double length;
+
+    DistanceConstraint(Body* a, Body* b, double length): Constraint(a, b), length(length) {}
 
     void apply() override;
 };
