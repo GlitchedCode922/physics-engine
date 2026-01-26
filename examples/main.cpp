@@ -85,11 +85,44 @@ int main() {
 
         // Clear the window with a light gray color
         window.clear(sf::Color(0x2e2e2eff));
+        // Constraints are drawn first so they appear behind bodies
+        sf::VertexArray lines(sf::Lines, scene->constraints.size() * 2);
+        for (int i = 0; i < scene->constraints.size(); i++) {
+            Constraint* c = scene->constraints[i];
+            lines[i * 2].position = sf::Vector2f(c->bodyA->position.x, c->bodyA->position.y);
+            lines[i * 2].color = sf::Color(0x808080ff);
+            lines[i * 2 + 1].position = sf::Vector2f(c->bodyB->position.x, c->bodyB->position.y);
+            lines[i * 2 + 1].color = sf::Color(0x808080ff);
+        }
+        window.draw(lines);
         for (auto body: scene->bodies) {
             if (CircleBody* c = dynamic_cast<CircleBody*>(body)) {
                 sf::CircleShape shape(c->radius);
                 shape.setFillColor(sf::Color(0xf0f0f0ff));
                 shape.setPosition(c->position.x - c->radius, c->position.y - c->radius);
+                window.draw(shape);
+            }
+            if (BoundedBoxBody* b = dynamic_cast<BoundedBoxBody*>(body)) {
+                // Draw 4 rectangles for the bounds
+                sf::RectangleShape shape;
+                shape.setFillColor(sf::Color(0xb3b3b3ff));
+                Vector2 min = b->position - Vector2(b->width * 0.5, b->height * 0.5);
+                Vector2 max = b->position + Vector2(b->width * 0.5, b->height * 0.5);
+                // Top
+                shape.setSize(sf::Vector2f(windowSize.x, min.y));
+                shape.setPosition(0, 0);
+                window.draw(shape);
+                // Bottom
+                shape.setSize(sf::Vector2f(windowSize.x, windowSize.y - max.y));
+                shape.setPosition(0, max.y);
+                window.draw(shape);
+                // Left
+                shape.setSize(sf::Vector2f(min.x, max.y - min.y));
+                shape.setPosition(0, min.y);
+                window.draw(shape);
+                // Right
+                shape.setSize(sf::Vector2f(windowSize.x - min.x, max.y - min.y));
+                shape.setPosition(max.x, min.y);
                 window.draw(shape);
             }
         }
