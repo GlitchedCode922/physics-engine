@@ -4,7 +4,8 @@
 #include "api.hpp"
 
 const double framerate = 60;
-const char window_title[] = "Bouncing Ball";
+const char windowTitle[] = "Bouncing Ball";
+const Vector2 windowSize(800, 600);
 
 Scene* setupScene() {
     Scene* scene = new Scene();

@@ -4,7 +4,8 @@
 #include "api.hpp"
 
 const double framerate = 240;
-const char window_title[] = "Soft body";
+const char windowTitle[] = "Soft body";
+const Vector2 windowSize(800, 600);
 
 Scene* setupScene() {
     Scene* scene = new Scene();

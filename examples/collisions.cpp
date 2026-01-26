@@ -4,7 +4,8 @@
 #include "api.hpp"
 
 const double framerate = 120;
-const char window_title[] = "Collisions";
+const char windowTitle[] = "Collisions";
+const Vector2 windowSize(800, 600);
 
 Scene* setupScene() {
     Scene* scene = new Scene();

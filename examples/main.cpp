@@ -8,7 +8,7 @@
 
 int main() {
     // Create the main window
-    sf::RenderWindow window(sf::VideoMode(800, 600), window_title);
+    sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), windowTitle);
 
     Scene* scene = setupScene();
     double fixed_dt = 1.0 / framerate;
