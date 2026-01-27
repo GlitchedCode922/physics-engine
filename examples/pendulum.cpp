@@ -2,7 +2,7 @@
 #include "headers/body.hpp"
 #include "headers/vector.hpp"
 #include "headers/constraint.hpp"
-#include "api.hpp"
+#include "common/api.hpp"
 
 const double framerate = 120;
 const char windowTitle[] = "Pendulum";

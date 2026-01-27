@@ -1,7 +1,7 @@
 #include "headers/scene.hpp"
 #include "headers/body.hpp"
 #include "headers/vector.hpp"
-#include "api.hpp"
+#include "common/api.hpp"
 
 const double framerate = 120;
 const char windowTitle[] = "Collisions";
