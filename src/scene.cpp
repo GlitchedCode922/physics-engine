@@ -26,7 +26,13 @@ void Scene::update(double dt) {
     }
     for (int i = 0; i < constraints.size(); i++) {
         Constraint* constraint = constraints[i];
-        constraint->apply();
+        if (!constraint->isIterative()) constraint->apply();
+    }
+    for (int i = 0; i < constraintIterations; i++) {
+        for (int j = 0; j < constraints.size(); j++) {
+            Constraint* constraint = constraints[j];
+            if (constraint->isIterative()) constraint->apply();
+        }
     }
     for (int i = 0; i < collisionIterations; i++) {
         for (int j = 0; j < bodies.size(); j++) {

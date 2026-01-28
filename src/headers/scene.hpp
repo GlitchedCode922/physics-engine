@@ -9,6 +9,7 @@ public:
     Vector2 gravity = Vector2(0, 327);
     std::vector<Body*> bodies;
     std::vector<Constraint*> constraints;
+    int constraintIterations = 5;
     int collisionIterations = 10;
 
     void addBody(Body* body);

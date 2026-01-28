@@ -16,17 +16,17 @@ Scene* setupScene() {
     CircleBody* circleB = new CircleBody(Vector2(400, 300), 20);
     scene->addBody(circleA);
     scene->addBody(circleB);
-    Body* prevBody = circleA;
+    CircleBody* prevBody = circleA;
     const int numSegments = 20;
-    const double segmentLength = 5.0;
+    const double segmentLength = 3.0;
     for (int i = 1; i <= numSegments; ++i) {
         CircleBody* segment = new CircleBody(Vector2(300 + i * segmentLength, 200), 1);
         scene->addBody(segment);
-        DistanceConstraint* c = new DistanceConstraint(prevBody, segment, segmentLength);
+        DistanceConstraint* c = new DistanceConstraint(prevBody, segment, prevBody->radius + segment->radius + segmentLength);
         scene->addConstraint(c);
         prevBody = segment;
     }
-    DistanceConstraint* endConstraint = new DistanceConstraint(prevBody, circleB, segmentLength);
+    DistanceConstraint* endConstraint = new DistanceConstraint(prevBody, circleB, circleB->radius + prevBody->radius + segmentLength);
     scene->addConstraint(endConstraint);
 
     BoundedBoxBody* bb = new BoundedBoxBody(Vector2(400, 300), 700, 500);

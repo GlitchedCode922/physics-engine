@@ -10,6 +10,7 @@ public:
     Constraint(Body* a, Body* b)
         : bodyA(a), bodyB(b) {}
 
+    virtual bool isIterative() {return false;}
     virtual void apply() = 0;
     virtual ~Constraint() {}
 };
@@ -32,5 +33,6 @@ public:
 
     DistanceConstraint(Body* a, Body* b, double length): Constraint(a, b), length(length) {}
 
+    bool isIterative() override {return true;}
     void apply() override;
 };
