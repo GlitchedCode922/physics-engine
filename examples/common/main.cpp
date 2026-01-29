@@ -17,6 +17,7 @@ int main() {
     // Dragging variables
     Body* draggedBody = nullptr;
     Vector2 dragOffset(0, 0);
+    bool isDraggedStatic = false;
 
     // Main loop
     bool firstFrame = true;
@@ -49,6 +50,8 @@ int main() {
                             draggedBody = c;
                             dragOffset = c->position - mouseWorld;
                             c->velocity = Vector2(0, 0); // reset velocity before pulling
+                            isDraggedStatic = c->isStatic;
+                            c->isStatic = true;
                             break;
                         }
                     }
@@ -57,6 +60,7 @@ int main() {
 
             // Mouse released
             if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+                if (draggedBody) draggedBody->isStatic = isDraggedStatic;
                 draggedBody = nullptr;
             }
         }
