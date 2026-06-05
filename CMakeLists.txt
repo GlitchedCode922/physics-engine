@@ -32,7 +32,11 @@ file(GLOB EXAMPLE_SOURCES "examples/*.cpp")
 foreach(example_src ${EXAMPLE_SOURCES}) 
     get_filename_component(example_name ${example_src} NAME_WE)
     add_executable(${example_name} EXCLUDE_FROM_ALL ${example_src} $<TARGET_OBJECTS:examples_common>)
-    target_link_libraries(${example_name} PRIVATE physics_static sfml-graphics sfml-window sfml-system)
+    if (TARGET SFML::Graphics) # SFML 3
+        target_link_libraries(${example_name} PRIVATE physics_static SFML::Graphics SFML::Window SFML::System)
+    else() # SFML 2
+        target_link_libraries(${example_name} PRIVATE physics_static sfml-graphics sfml-window sfml-system)
+    endif()
 
     list(APPEND EXAMPLE_TARGETS ${example_name})
 endforeach()
